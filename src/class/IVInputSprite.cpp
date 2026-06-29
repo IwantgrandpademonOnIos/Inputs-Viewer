@@ -19,13 +19,7 @@ IVSettingFilter::IVSettingFilter(std::nullopt_t) : IVSettingFilter() {}
 IVSettingFilter::IVSettingFilter(SettingEventType type)
     : m_type(type) {}
 
-// CORRECCIÓN DEFINITIVA: 
-// Cambiamos geode::utils::MiniFunction por geode::Function
-ListenerResult IVSettingFilter::handle(geode::Function<Callback> fn, IVSettingEvent* event) {
-    if (m_type && m_type.value() != event->getType()) return ListenerResult::Propagate;
 
-    fn(event->getType());
-    return ListenerResult::Propagate;
 }
 
 GEODE_NS_IV_END
