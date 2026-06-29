@@ -1,43 +1,39 @@
 #pragma once
 
-#include <Geode/Geode.hpp>
-
-using namespace geode::prelude;
+#include "IVConstants.hpp"
+#include "macros.hpp"
 
 GEODE_NS_IV_BEGIN
 
-// Aquí está tu Enum asegurado con RefreshView
 enum class SettingEventType {
-    Unknown,
-    RefreshView,
-    Color,
-    KeyAppearance
-};
-    // Si tenías otros estados (como UpdateColor, etc), escríbelos aquí abajo:
-    
+    BackgroundColor,
+    OutlineColor,
+    TextColor,
+    // add any other types you use here
 };
 
 class IVSettingEvent {
-protected:
-    SettingEventType m_type;
 public:
     IVSettingEvent(SettingEventType type);
+
     SettingEventType getType() const noexcept;
+
+private:
+    SettingEventType m_type;
 };
 
 class IVSettingFilter {
-protected:
-    std::optional<SettingEventType> m_type;
 public:
-    using Callback = void(SettingEventType);
-    using Event = IVSettingEvent; 
-
     IVSettingFilter();
     IVSettingFilter(std::nullopt_t);
     IVSettingFilter(SettingEventType type);
 
-    // CORRECCIÓN ASEGURADA: Solo geode::Function
+    using Callback = void(SettingEventType);
+
     ListenerResult handle(geode::Function<Callback> fn, IVSettingEvent* event);
+
+private:
+    std::optional<SettingEventType> m_type;
 };
 
 GEODE_NS_IV_END
