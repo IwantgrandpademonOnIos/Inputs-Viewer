@@ -20,7 +20,7 @@ IVSettingFilter::IVSettingFilter(SettingEventType type)
     : m_type(type) {}
 
 // CORRECCIÓN V5: Adiós std::function.
-ListenerResult IVSettingFilter::handle(geode::utils::MiniFunction<Callback> fn, IVSettingEvent* event) {
+ListenerResult geode::IVSettingFilter::handle(geode::utils::MiniFunction<Callback> fn, IVSettingEvent* event) {
     // Evaluamos si el tipo coincide
     if (m_type && m_type.value() != event->getType()) return ListenerResult::Propagate;
 
