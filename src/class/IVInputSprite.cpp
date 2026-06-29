@@ -20,6 +20,4 @@ IVSettingFilter::IVSettingFilter(SettingEventType type)
     : m_type(type) {}
 
 
-}
-
 GEODE_NS_IV_END
