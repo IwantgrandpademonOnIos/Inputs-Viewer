@@ -20,15 +20,12 @@ IVSettingFilter::IVSettingFilter(std::nullopt_t)
 IVSettingFilter::IVSettingFilter(SettingEventType type)
     : m_type(type) {}
 
-// CORRECCIÓN: Geode 5 uses geode::Function instead of MiniFunction.
-ListenerResult IVSettingFilter::handle(geode::Function<Callback> fn, IVSettingEvent* event) {
-    // Si el tipo no coincide, propagamos sin ejecutar
+geode::ListenerResult IVSettingFilter::handle(geode::Function<Callback> fn, IVSettingEvent* event) {
     if (m_type && m_type.value() != event->getType())
-        return ListenerResult::Propagate;
+        return geode::ListenerResult::Propagate;
 
-    // Ejecutamos la función con el tipo del evento
     fn(event->getType());
-    return ListenerResult::Propagate;
+    return geode::ListenerResult::Propagate;
 }
 
 GEODE_NS_IV_END
