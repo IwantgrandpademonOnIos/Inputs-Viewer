@@ -43,6 +43,7 @@ jobs:
           build-config: RelWithDebInfo
           bindings: geode-sdk/bindings
           bindings-ref: main
+          toolchain: geode-sdk/ios.toolchain.cmake
           combine: true
           target: ${{ matrix.config.target }}
 
