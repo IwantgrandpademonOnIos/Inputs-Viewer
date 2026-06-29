@@ -7,7 +7,9 @@ GEODE_NS_IV_BEGIN
 
 InputsViewLayer::InputsViewLayer(LevelSettingsType type)
     : m_currentSetting(IVManager::get().getLevelSettings(type))
-    , m_settingListener(this, &InputsViewLayer::onSettingEvent, IVSettingFilter(SettingEventType::RefreshView)) {}
+{
+    // Geode 5 removed EventListener, so the old listener is gone.
+}
 
 InputsViewLayer* InputsViewLayer::create(LevelSettingsType type) {
     auto ret = new (std::nothrow) InputsViewLayer(type);
@@ -24,6 +26,7 @@ bool InputsViewLayer::init() {
 
     m_p1InputNode = PlayerInputNode::create(m_currentSetting, "P1");
     this->addChild(m_p1InputNode);
+
     m_p2InputNode = PlayerInputNode::create(m_currentSetting, "P2");
     this->addChild(m_p2InputNode);
 
