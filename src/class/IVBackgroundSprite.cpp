@@ -42,4 +42,4 @@ bool BackgroundSprite::init() {
 
     m_outline = CCScale9Sprite::create("background_outline.png"_spr);
     this->addChild(m_outline);
-    this->addOutlineNode(m_outline
+    this->addOutlineNode(m_outline);
