@@ -19,5 +19,4 @@ IVSettingFilter::IVSettingFilter(std::nullopt_t) : IVSettingFilter() {}
 IVSettingFilter::IVSettingFilter(SettingEventType type)
     : m_type(type) {}
 
-{
 GEODE_NS_IV_END
