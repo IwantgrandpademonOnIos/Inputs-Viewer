@@ -2,7 +2,7 @@
 
 #include "IVEvent.hpp"
 #include "IVLevelSettings.hpp"
-#include "geode_setting/PlayerInputNode.hpp"
+#include "class/PlayerInputNode.hpp"
 
 GEODE_NS_IV_BEGIN
 
