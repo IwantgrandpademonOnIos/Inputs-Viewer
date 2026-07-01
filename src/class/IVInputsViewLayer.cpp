@@ -24,10 +24,10 @@ InputsViewLayer* InputsViewLayer::create(LevelSettingsType type) {
 bool InputsViewLayer::init() {
     if (!CCLayer::init()) return false;
 
-    m_p1InputNode = PlayerInputNode::create(m_currentSetting, "P1");
+    m_p1InputNode = IVPlayerInputNode::create(m_currentSetting, "P1");
     this->addChild(m_p1InputNode);
 
-    m_p2InputNode = PlayerInputNode::create(m_currentSetting, "P2");
+    m_p2InputNode = IVPlayerInputNode::create(m_currentSetting, "P2");
     this->addChild(m_p2InputNode);
 
     this->refreshDisplay();
