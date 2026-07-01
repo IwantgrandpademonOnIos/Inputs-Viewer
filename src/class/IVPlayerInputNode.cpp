@@ -5,11 +5,11 @@ using namespace geode::prelude;
 
 GEODE_NS_IV_BEGIN
 
-PlayerInputNode::PlayerInputNode(LevelSettings const& setting)
+IVPlayerInputNode::IVPlayerInputNode(LevelSettings const& setting)
     : m_currentSetting(setting)
     , m_settingListener([this](auto) { this->refreshAppearance(); }, IVSettingFilter(SettingEventType::KeyAppearance)) {}
 
-PlayerInputNode* PlayerInputNode::create(LevelSettings const& setting, char const* playerText) {
+IVPlayerInputNode* IVPlayerInputNode::create(LevelSettings const& setting, char const* playerText) {
     auto ret = new (std::nothrow) PlayerInputNode(setting);
     if (ret && ret->init(playerText)) {
         ret->autorelease();
@@ -19,7 +19,7 @@ PlayerInputNode* PlayerInputNode::create(LevelSettings const& setting, char cons
     return nullptr;
 }
 
-bool PlayerInputNode::init(char const* playerText) {
+bool IVPlayerInputNode::init(char const* playerText) {
     if (!CCNode::init()) return false;
 
     m_jumpButton = InputSprite::create(this, PlayerButton::Jump, playerText);
@@ -47,7 +47,7 @@ bool PlayerInputNode::init(char const* playerText) {
     return true;
 }
 
-void PlayerInputNode::handleButton(bool down, PlayerButton input, bool updateCounters) {
+void IVPlayerInputNode::handleButton(bool down, PlayerButton input, bool updateCounters) {
     switch (input) {
     case PlayerButton::Jump:
         m_jumpButton->press(down, updateCounters); break;
@@ -58,39 +58,39 @@ void PlayerInputNode::handleButton(bool down, PlayerButton input, bool updateCou
     }
 }
 
-bool PlayerInputNode::isMinimalMode() const {
+bool IVPlayerInputNode::isMinimalMode() const {
     return m_currentSetting.get().hideLeftRight;
 }
 
-void PlayerInputNode::setShowTotalInputs(bool show) {
+void IVPlayerInputNode::setShowTotalInputs(bool show) {
     m_jumpButton->setShowTotalInputs(show);
     m_leftButton->setShowTotalInputs(show);
     m_rightButton->setShowTotalInputs(show);
 }
 
-void PlayerInputNode::setShowCPS(bool show) {
+void IVPlayerInputNode::setShowCPS(bool show) {
     m_jumpButton->setShowCPS(show);
     m_leftButton->setShowCPS(show);
     m_rightButton->setShowCPS(show);
 }
 
-void PlayerInputNode::releaseAllButtons() {
+void IVPlayerInputNode::releaseAllButtons() {
     m_jumpButton->press(false, false);
     m_leftButton->press(false, false);
     m_rightButton->press(false, false);
 }
 
-void PlayerInputNode::setLevelSettings(LevelSettings const& settings) {
+void IVPlayerInputNode::setLevelSettings(LevelSettings const& settings) {
     m_currentSetting = settings;
 
     this->refreshAppearance();
 }
 
-LevelSettings const& PlayerInputNode::getLevelSettings() const noexcept {
+LevelSettings const& IVPlayerInputNode::getLevelSettings() const noexcept {
     return m_currentSetting;
 }
 
-void PlayerInputNode::refreshAppearance() {
+void IVPlayerInputNode::refreshAppearance() {
     if (this->isMinimalMode()) {
         m_jumpButton->setMinimal(true);
         m_playerIndicator->setVisible(false);
