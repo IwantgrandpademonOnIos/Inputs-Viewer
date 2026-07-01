@@ -44,7 +44,6 @@ IVManager::IVManager()
         }))
 {
     // The macro MUST be inside the constructor body.
-    {
     GEODE_IV_CONSTRUCT_COLOR(background)
     GEODE_IV_CONSTRUCT_COLOR(outline)
     GEODE_IV_CONSTRUCT_COLOR(text)
