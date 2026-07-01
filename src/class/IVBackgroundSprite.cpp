@@ -44,3 +44,9 @@ bool BackgroundSprite::init() {
     this->addChild(m_outline);
     this->addOutlineNode(m_outline);
 }
+
+    GEODE_NS_IV_END
+
+
+
+
