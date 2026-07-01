@@ -24,8 +24,8 @@ public:
 protected:
     std::reference_wrapper<LevelSettings> m_currentSetting;
 
-    PlayerInputNode* m_p1InputNode = nullptr;
-    PlayerInputNode* m_p2InputNode = nullptr;
+    IVPlayerInputNode* m_p1InputNode = nullptr;
+    IVPlayerInputNode* m_p2InputNode = nullptr;
 
     // Geode 5 removed EventListener, so this member is gone.
     // geode::EventListener<IVSettingFilter> m_settingListener;
