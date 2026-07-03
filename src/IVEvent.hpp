@@ -14,7 +14,7 @@ enum class SettingEventType {
 };
 
 // Event object carrying the type
-class IVSettingEvent : public geode::Event {
+class IVSettingEvent {
 public:
     IVSettingEvent(SettingEventType type)
         : m_type(type) {}
