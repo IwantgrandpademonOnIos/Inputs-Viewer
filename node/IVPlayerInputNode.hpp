@@ -1,32 +1,23 @@
 #pragma once
-#include "IVInputSprite.hpp"
-#include "IVLevelSettings.hpp"
-#include <IVEvent.hpp>
+#include "IVNodeInput.hpp"
 
 GEODE_NS_IV_BEGIN
 
-class IVPlayerInputNode : public cocos2d::CCNode {
+class IVPlayerInputNode : public IVNodeInput {
 public:
-    IVPlayerInputNode(LevelSettings const& setting);
-    static IVPlayerInputNode* create(LevelSettings const& setting, char const* playerText);
-    bool init(char const* playerText);
-public:
-    void handleButton(bool down, PlayerButton input, bool updateCounters = true);
-    void refreshAppearance();
-    void setShowTotalInputs(bool show);
-    void setShowCPS(bool show);
-    void releaseAllButtons();
-    void setLevelSettings(LevelSettings const& settings);
-    LevelSettings const& getLevelSettings() const noexcept;
+    IVPlayerInputNode();
+    static IVPlayerInputNode* create(IVInputType type);
+
+    bool init(IVInputType type);
+
+    // Called when the player presses or releases an input
+    void updateInputState(bool pressed);
+
+    // Refresh appearance (color, scale, etc.)
+    void refreshAppearance() override;
+
 protected:
-    bool isMinimalMode() const;
-protected:
-    std::reference_wrapper<LevelSettings const> m_currentSetting;
-    InputSprite* m_jumpButton = nullptr;
-    InputSprite* m_leftButton = nullptr;
-    InputSprite* m_rightButton = nullptr;
-    BackgroundSprite* m_playerIndicator = nullptr;
-    geode::EventListener<IVSettingFilter> m_settingListener;
+    bool m_currentPressed = false;
 };
 
 GEODE_NS_IV_END
