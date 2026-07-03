@@ -86,19 +86,19 @@ void BackgroundSprite::addTextNode(cocos2d::CCNode* node) {
 
 void BackgroundSprite::removeBackgroundNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_backgroundColorNodes.removeObject(node);
+    m_backgroundColorNodes.remove(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::removeOutlineNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_outlineColorNodes.removeObject(node);
+    m_outlineColorNodes.remove(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::removeTextNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_textColorNodes.removeObject(node);
+    m_textColorNodes.remove(node);
     m_shouldUpdateLayout = true;
 }
 
