@@ -1,45 +1,20 @@
-#include "IVNodeContainer.hpp"
-
-using namespace geode::prelude;
+#pragma once
+#include "IVNodeBase.hpp"
 
 GEODE_NS_IV_BEGIN
 
-IVNodeContainer::IVNodeContainer() {}
+class IVNodeContainer : public IVNodeBase {
+public:
+    IVNodeContainer();
+    static IVNodeContainer* create();
 
-IVNodeContainer* IVNodeContainer::create() {
-    auto ret = new (std::nothrow) IVNodeContainer();
-    if (ret && ret->init()) {
-        ret->autorelease();
-        return ret;
-    }
-    delete ret;
-    return nullptr;
-}
+    bool init() override;
 
-bool IVNodeContainer::init() {
-    if (!IVNodeBase::init())
-        return false;
+    // Add a child node with layout support
+    void addNode(IVNodeBase* node);
 
-    return true;
-}
-
-void IVNodeContainer::addNode(IVNodeBase* node) {
-    if (!node) return;
-    this->addChild(node);
-}
-
-void IVNodeContainer::refreshAppearance() {
     // Refresh appearance for all children
-    CCArray* children = this->getChildren();
-    if (!children) return;
-
-    CCObject* obj;
-    CCARRAY_FOREACH(children, obj) {
-        auto child = dynamic_cast<IVNodeBase*>(obj);
-        if (child) {
-            child->refreshAppearance();
-        }
-    }
-}
+    void refreshAppearance() override;
+};
 
 GEODE_NS_IV_END
