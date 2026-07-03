@@ -68,37 +68,37 @@ bool BackgroundSprite::init() {
 
 void BackgroundSprite::addBackgroundNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_backgroundColorNodes.addObject(node);
+    m_backgroundColorNodes.add(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::addOutlineNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_outlineColorNodes.addObject(node);
+    m_outlineColorNodes.add(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::addTextNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_textColorNodes.addObject(node);
+    m_textColorNodes.add(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::removeBackgroundNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_backgroundColorNodes.removeObject(node);
+    m_backgroundColorNodes.remove(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::removeOutlineNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_outlineColorNodes.removeObject(node);
+    m_outlineColorNodes.remove(node);
     m_shouldUpdateLayout = true;
 }
 
 void BackgroundSprite::removeTextNode(cocos2d::CCNode* node) {
     if (!node) return;
-    m_textColorNodes.removeObject(node);
+    m_textColorNodes.remove(node);
     m_shouldUpdateLayout = true;
 }
 
