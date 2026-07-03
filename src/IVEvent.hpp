@@ -1,7 +1,6 @@
 #pragma once
 
 #include <optional>
-#include <Geode/loader/Event.hpp>
 #include <Geode/utils/function.hpp>
 
 GEODE_NS_IV_BEGIN
@@ -13,7 +12,8 @@ enum class SettingEventType {
     TextColor,
 };
 
-// Event object carrying the type
+// Simple event object carrying the type
+// (no inheritance — geode::Event no longer exists)
 class IVSettingEvent {
 public:
     IVSettingEvent(SettingEventType type)
@@ -42,6 +42,7 @@ public:
     using Callback = void(SettingEventType);
 
     geode::ListenerResult handle(geode::Function<Callback> fn, IVSettingEvent* event) {
+        // If filter is set to a specific type, skip others
         if (m_type && m_type.value() != event->getType())
             return geode::ListenerResult::Propagate;
 
