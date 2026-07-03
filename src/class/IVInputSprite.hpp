@@ -1,53 +1,20 @@
 #pragma once
-#include "IVBackgroundSprite.hpp"
-#include <IVEvent.hpp>
-#include <Geode/loader/SettingV3.hpp>
+#include <Geode/Geode.hpp>
 
 GEODE_NS_IV_BEGIN
 
-enum class CPSCalculation {
-    RealTime,
-    PerSecond,
-};
+class IVInputSprite : public cocos2d::CCSprite {
+public:
+    IVInputSprite();
+    static IVInputSprite* create(const char* spriteName);
 
-class PlayerInputNode;
+    bool init(const char* spriteName);
 
-class InputSprite : public BackgroundSprite {
-public:
-    InputSprite();
-    static InputSprite* create(PlayerInputNode* inputNode, PlayerButton button, char const* playerText);
-    bool init(PlayerInputNode* inputNode, PlayerButton button, char const* playerText);
-public:
-    void press(bool pressed, bool updateCounters = true);
-    void setShowTotalInputs(bool show);
-    void setCPSMode(CPSCalculation mode);
-    void setShowCPS(bool show);
-    void setMinimal(bool minimal);
-    void updateButtonAppearance();
-    void onSettingChange(SettingEventType type);
-public:
-    void visit() override;
+    // Update pressed state visuals
+    void setPressed(bool pressed);
+
 protected:
-    void updateCPSCounter();
-    void updateTotalInputsDisplay();
-    void updateCPSDisplay();
-    void cpsSchedule(float dt);
-    void subtractCPS();
-    void updateLabelWidth(cocos2d::CCLabelBMFont* font);
-protected:
-    PlayerInputNode* m_inputNode = nullptr;
-    bool m_shouldUpdateTotalInputsDisplay = false;
-    bool m_shouldUpdateCPSDisplay = false;
-    unsigned m_totalInputs = 0;
-    unsigned m_clicksPerSecond = 0;
-    unsigned m_displayedCPS = 0;
-    CPSCalculation m_currentCPSCalculation;
-    float m_textScale = 0.5f;
-    cocos2d::CCSprite* m_inputSymbol = nullptr;
-    cocos2d::CCLabelBMFont* m_playerText = nullptr;
-    cocos2d::CCLabelBMFont* m_totalInputsText = nullptr;
-    cocos2d::CCLabelBMFont* m_cpsText = nullptr;
-    geode::EventListener<geode::SettingChangedFilterV3> m_cpsSettingListener;
+    bool m_pressed = false;
 };
 
 GEODE_NS_IV_END
