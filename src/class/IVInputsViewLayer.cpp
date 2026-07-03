@@ -1,18 +1,13 @@
-#include "IVInputsViewLayer.hpp"
-#include "IVManager.hpp"
+#include "IVInputsViewerLayer.hpp"
 
 using namespace geode::prelude;
 
 GEODE_NS_IV_BEGIN
 
-InputsViewLayer::InputsViewLayer(LevelSettingsType type)
-    : m_currentSetting(IVManager::get().getLevelSettings(type))
-{
-    // Geode 5 removed EventListener, so the old listener is gone.
-}
+IVInputsViewerLayer::IVInputsViewerLayer() {}
 
-InputsViewLayer* InputsViewLayer::create(LevelSettingsType type) {
-    auto ret = new (std::nothrow) InputsViewLayer(type);
+IVInputsViewerLayer* IVInputsViewerLayer::create() {
+    auto ret = new (std::nothrow) IVInputsViewerLayer();
     if (ret && ret->init()) {
         ret->autorelease();
         return ret;
@@ -21,59 +16,38 @@ InputsViewLayer* InputsViewLayer::create(LevelSettingsType type) {
     return nullptr;
 }
 
-bool InputsViewLayer::init() {
-    if (!CCLayer::init()) return false;
+bool IVInputsViewerLayer::init() {
+    if (!CCLayer::init())
+        return false;
 
-    m_p1InputNode = IVPlayerInputNode::create(m_currentSetting, "P1");
-    this->addChild(m_p1InputNode, 0);
+    m_container = IVNodeContainer::create();
+    this->addChild(m_container);
 
-    m_p2InputNode = IVPlayerInputNode::create(m_currentSetting, "P2");
-    this->addChild(m_p2InputNode, 0);
-
-    this->refreshDisplay();
+    this->scheduleUpdate();
     return true;
 }
 
-void InputsViewLayer::handleButton(bool down, PlayerButton input, bool isP1, bool updateCounters) {
-    if (isP1) {
-        if (m_currentSetting.get().p1Transform.isVisible) {
-            m_p1InputNode->handleButton(down, input, updateCounters);
-        } else if (m_currentSetting.get().p2Transform.isVisible) {
-            m_p2InputNode->handleButton(down, input, updateCounters);
-        }
-    } else {
-        if (m_currentSetting.get().p2Transform.isVisible) {
-            m_p2InputNode->handleButton(down, input, updateCounters);
-        } else if (m_currentSetting.get().p1Transform.isVisible) {
-            m_p1InputNode->handleButton(down, input, updateCounters);
-        }
+void IVInputsViewerLayer::addInputNode(IVPlayerInputNode* node) {
+    if (m_container && node) {
+        m_container->addNode(node);
     }
 }
 
-LevelSettings const& InputsViewLayer::getLevelSettings() const noexcept {
-    return m_currentSetting;
-}
+void IVInputsViewerLayer::update(float dt) {
+    // Example input polling (replace with actual GD input hooks)
+    bool jumpPressed = cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed();
 
-void InputsViewLayer::setLevelSettings(LevelSettingsType type) {
-    m_currentSetting = IVManager::get().getLevelSettings(type);
-    m_p1InputNode->setLevelSettings(m_currentSetting);
-    m_p2InputNode->setLevelSettings(m_currentSetting);
+    // Update all children
+    auto children = m_container->getChildren();
+    if (!children) return;
 
-    this->refreshDisplay();
-}
-
-void InputsViewLayer::releaseAllButtons() {
-    m_p1InputNode->releaseAllButtons();
-    m_p2InputNode->releaseAllButtons();
-}
-
-void InputsViewLayer::refreshDisplay() {
-    m_currentSetting.get().p1Transform.applyTransform(m_p1InputNode);
-    m_currentSetting.get().p2Transform.applyTransform(m_p2InputNode);
-}
-
-void InputsViewLayer::onSettingEvent(SettingEventType) {
-    this->refreshDisplay();
+    CCObject* obj;
+    CCARRAY_FOREACH(children, obj) {
+        auto inputNode = dynamic_cast<IVPlayerInputNode*>(obj);
+        if (inputNode) {
+            inputNode->updateInputState(jumpPressed);
+        }
+    }
 }
 
 GEODE_NS_IV_END
