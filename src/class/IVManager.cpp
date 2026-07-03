@@ -4,11 +4,9 @@
 
 using namespace geode::prelude;
 
-// Initializer order doesn't matter here
 #pragma GCC diagnostic ignored "-Wreorder-ctor"
 
-// This macro now ONLY loads colors.
-// No listeners, no events, no invalid calls.
+// Macro: ONLY loads colors. No listeners, no events.
 #define GEODE_IV_CONSTRUCT_COLOR(__col) \
     m_##__col##PressColor = Mod::get()->getSettingValue<ccColor4B>(#__col "-press-color"); \
     m_##__col##ReleaseColor = Mod::get()->getSettingValue<ccColor4B>(#__col "-release-color");
@@ -28,7 +26,6 @@ IVManager::IVManager()
             .p2Transform = IVManager::getDefaultP2Transform()
         }))
 {
-    // Load all color settings
     GEODE_IV_CONSTRUCT_COLOR(background)
     GEODE_IV_CONSTRUCT_COLOR(outline)
     GEODE_IV_CONSTRUCT_COLOR(text)
@@ -64,7 +61,7 @@ LevelSettings& IVManager::getLevelSettings(LevelSettingsType type) noexcept {
         case LevelSettingsType::Platformer:
             return m_settingPlatformer;
     }
-    return m_settingClassic; // fallback
+    return m_settingClassic;
 }
 
 GEODE_NS_IV_END
