@@ -6,7 +6,7 @@
 
 GEODE_NS_IV_BEGIN
 
-// Transform for each player’s input viewer node
+// Transform for each player's input viewer node
 struct NodeTransform {
     cocos2d::CCPoint position;
     float scale;
@@ -22,10 +22,11 @@ struct LevelSettings {
 
 GEODE_NS_IV_END
 
-// -------------------------------
-// JSON SERIALIZATION (REQUIRED)
-// -------------------------------
+// ---------------------------------------------------------
+// JSON SERIALIZATION (REQUIRED FOR getSavedValue<LevelSettings>)
+// ---------------------------------------------------------
 
+// Serialize NodeTransform
 template <>
 struct matjson::Serialize<inputs_viewer::NodeTransform> {
     static matjson::Value toJson(inputs_viewer::NodeTransform const& t) {
@@ -39,31 +40,4 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
 
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
         auto obj = v.asObject();
-        auto pos = obj["position"].asArray();
-
-        return inputs_viewer::NodeTransform{
-            {pos[0].asDouble(), pos[1].asDouble()},
-            obj["scale"].asDouble(),
-            obj["rotation"].asDouble(),
-            obj["isVisible"].asBool()
-        };
-    }
-};
-
-template <>
-struct matjson::Serialize<inputs_viewer::LevelSettings> {
-    static matjson::Value toJson(inputs_viewer::LevelSettings const& s) {
-        return matjson::Object{
-            {"p1Transform", matjson::Serialize<inputs_viewer::NodeTransform>::toJson(s.p1Transform)},
-            {"p2Transform", matjson::Serialize<inputs_viewer::NodeTransform>::toJson(s.p2Transform)}
-        };
-    }
-
-    static inputs_viewer::LevelSettings fromJson(matjson::Value const& v) {
-        auto obj = v.asObject();
-        return inputs_viewer::LevelSettings{
-            matjson::Serialize<inputs_viewer::NodeTransform>::fromJson(obj["p1Transform"]),
-            matjson::Serialize<inputs_viewer::NodeTransform>::fromJson(obj["p2Transform"])
-        };
-    }
-};
+        auto
