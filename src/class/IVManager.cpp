@@ -1,67 +1,57 @@
 #include "IVManager.hpp"
-#include "IVEvent.hpp"
 #include "IVLevelSettings.hpp"
 
 using namespace geode::prelude;
 
-#pragma GCC diagnostic ignored "-Wreorder-ctor"
-
-// Macro: ONLY loads colors. No listeners, no events.
-#define GEODE_IV_CONSTRUCT_COLOR(__col) \
-    m_##__col##PressColor = Mod::get()->getSettingValue<ccColor4B>(#__col "-press-color"); \
-    m_##__col##ReleaseColor = Mod::get()->getSettingValue<ccColor4B>(#__col "-release-color");
-
 GEODE_NS_IV_BEGIN
-
-IVManager::IVManager()
-    : m_isInSetting(false)
-    , m_settingClassic(
-        Mod::get()->getSavedValue<LevelSettings>("classic", {
-            .p1Transform = IVManager::getDefaultP1Transform(),
-            .p2Transform = IVManager::getDefaultP2Transform()
-        }))
-    , m_settingPlatformer(
-        Mod::get()->getSavedValue<LevelSettings>("platformer", {
-            .p1Transform = IVManager::getDefaultP1Transform(),
-            .p2Transform = IVManager::getDefaultP2Transform()
-        }))
-{
-    GEODE_IV_CONSTRUCT_COLOR(background)
-    GEODE_IV_CONSTRUCT_COLOR(outline)
-    GEODE_IV_CONSTRUCT_COLOR(text)
-}
 
 IVManager& IVManager::get() {
     static IVManager instance;
     return instance;
 }
 
-NodeTransform IVManager::getDefaultP1Transform() {
-    return {
-        .position = { 0.f, 0.f },
-        .scale = 1.f,
-        .rotation = 0.f,
-        .isVisible = true
-    };
-}
+void IVManager::loadSettings() {
+    auto saved = Mod::get()->getSavedValue<matjson::Value>("level-settings", matjson::Object{});
 
-NodeTransform IVManager::getDefaultP2Transform() {
-    return {
-        .position = { 0.f, 0.f },
-        .scale = 1.f,
-        .rotation = 0.f,
-        .isVisible = true
-    };
-}
+    for (auto& [key, value] : saved.asObject()) {
+        // Deserialize LevelSettings from JSON
+        LevelSettings settings = matjson::Serialize<LevelSettings>::fromJson(value);
 
-LevelSettings& IVManager::getLevelSettings(LevelSettingsType type) noexcept {
-    switch (type) {
-        case LevelSettingsType::Classic:
-            return m_settingClassic;
-        case LevelSettingsType::Platformer:
-            return m_settingPlatformer;
+        m_levelSettings[key] = settings;
     }
-    return m_settingClassic;
+}
+
+void IVManager::saveSettings() {
+    matjson::Object saved;
+
+    for (auto const& [key, settings] : m_levelSettings) {
+        // Serialize LevelSettings into JSON
+        saved[key] = matjson::Serialize<LevelSettings>::toJson(settings);
+    }
+
+    Mod::get()->setSavedValue("level-settings", saved);
+}
+
+LevelSettings IVManager::getLevelSettings(std::string const& levelID) {
+    if (m_levelSettings.contains(levelID)) {
+        return m_levelSettings[levelID];
+    }
+
+    // Default settings
+    LevelSettings defaultSettings{
+        NodeTransform{{0.f, 0.f}, 1.f, 0.f, true},
+        NodeTransform{{0.f, 0.f}, 1.f, 0.f, true}
+    };
+
+    // Save default using proper JSON serialization
+    m_levelSettings[levelID] = defaultSettings;
+
+    return defaultSettings;
+}
+
+void IVManager::setLevelSettings(std::string const& levelID, LevelSettings const& settings) {
+    m_levelSettings[levelID] = settings;
+    saveSettings();
 }
 
 GEODE_NS_IV_END
