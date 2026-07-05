@@ -20,10 +20,6 @@ struct LevelSettings {
 
 GEODE_NS_IV_END
 
-// ---------------------------------------------------------
-// JSON SERIALIZATION (Result<T> + unwrapOr + explicit casts)
-// ---------------------------------------------------------
-
 template <>
 struct matjson::Serialize<inputs_viewer::NodeTransform> {
     static matjson::Value toJson(inputs_viewer::NodeTransform const& t) {
@@ -44,19 +40,28 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
         auto& obj = v;
 
-        auto posVec = obj["position"].asArray().unwrapOr({});
+        float x = 0.f;
+        float y = 0.f;
 
-        float x = posVec.size() > 0
-            ? static_cast<float>(posVec[0].asDouble().unwrapOr(0.0))
-            : 0.0f;
+        if (obj["position"].isArray()) {
+            auto arr = obj["position"].asArray();
+            if (arr.size() > 0 && arr[0].isNumber())
+                x = static_cast<float>(arr[0].asNumber());
+            if (arr.size() > 1 && arr[1].isNumber())
+                y = static_cast<float>(arr[1].asNumber());
+        }
 
-        float y = posVec.size() > 1
-            ? static_cast<float>(posVec[1].asDouble().unwrapOr(0.0))
-            : 0.0f;
+        float scale = obj["scale"].isNumber()
+            ? static_cast<float>(obj["scale"].asNumber())
+            : 1.f;
 
-        float scale = static_cast<float>(obj["scale"].asDouble().unwrapOr(1.0));
-        float rotation = static_cast<float>(obj["rotation"].asDouble().unwrapOr(0.0));
-        bool isVisible = obj["isVisible"].asBool().unwrapOr(true);
+        float rotation = obj["rotation"].isNumber()
+            ? static_cast<float>(obj["rotation"].asNumber())
+            : 0.f;
+
+        bool isVisible = obj["isVisible"].isBool()
+            ? obj["isVisible"].asBool()
+            : true;
 
         return inputs_viewer::NodeTransform{
             { x, y },
