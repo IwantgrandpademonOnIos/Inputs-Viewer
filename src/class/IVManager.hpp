@@ -1,8 +1,10 @@
 #pragma once
+
 #include "IVLevelSettings.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/loader/Event.hpp>
 #include <Geode/loader/SettingV3.hpp>
+#include <unordered_map>
 
 GEODE_NS_IV_BEGIN
 
@@ -12,9 +14,18 @@ class IVManager {
 public:
     IVManager();
     static IVManager& get();
+
+    // Default transforms for each player
     static NodeTransform getDefaultP1Transform();
     static NodeTransform getDefaultP2Transform();
-    LevelSettings& getLevelSettings(LevelSettingsType type) noexcept;
+
+    // Per-level settings (by level ID string)
+    LevelSettings getLevelSettings(std::string const& levelID);
+    void setLevelSettings(std::string const& levelID, LevelSettings const& settings);
+
+    // Load/save all settings from/to Geode storage
+    void loadSettings();
+    void saveSettings();
 
 public:
     bool m_isInSetting;
@@ -30,7 +41,8 @@ public:
     LevelSettings m_settingPlatformer;
 
 protected:
-    // Geode 5 removed EventListener — listeners removed.
+    // Map of levelID -> LevelSettings
+    std::unordered_map<std::string, LevelSettings> m_levelSettings;
 };
 
 GEODE_NS_IV_END
