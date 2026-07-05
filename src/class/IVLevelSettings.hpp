@@ -47,4 +47,29 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
         auto pos = obj["position"].asArray();
 
         return inputs_viewer::NodeTransform{
-            { pos[0].asDouble(), pos
+            { pos[0].asDouble(), pos[1].asDouble() },
+            obj["scale"].asDouble(),
+            obj["rotation"].asDouble(),
+            obj["isVisible"].asBool()
+        };
+    }
+};
+
+template <>
+struct matjson::Serialize<inputs_viewer::LevelSettings> {
+    static matjson::Value toJson(inputs_viewer::LevelSettings const& s) {
+        auto obj = matjson::Value::object();
+        obj["p1Transform"] = matjson::Serialize<inputs_viewer::NodeTransform>::toJson(s.p1Transform);
+        obj["p2Transform"] = matjson::Serialize<inputs_viewer::NodeTransform>::toJson(s.p2Transform);
+        return obj;
+    }
+
+    static inputs_viewer::LevelSettings fromJson(matjson::Value const& v) {
+        auto& obj = v;
+
+        return inputs_viewer::LevelSettings{
+            matjson::Serialize<inputs_viewer::NodeTransform>::fromJson(obj["p1Transform"]),
+            matjson::Serialize<inputs_viewer::NodeTransform>::fromJson(obj["p2Transform"])
+        };
+    }
+};
