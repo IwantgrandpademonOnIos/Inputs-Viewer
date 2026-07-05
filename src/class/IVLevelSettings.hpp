@@ -21,7 +21,7 @@ struct LevelSettings {
 GEODE_NS_IV_END
 
 // ---------------------------------------------------------
-// JSON SERIALIZATION (minimal matjson API + unwrap())
+// JSON SERIALIZATION (Result<T> + unwrapOr())
 // ---------------------------------------------------------
 
 template <>
@@ -42,15 +42,18 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
     }
 
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
-        auto& obj = v; // v IS the object
+        auto& obj = v;
 
-        auto posVec = obj["position"].asArray().unwrap(); // FIX: unwrap()
+        auto posVec = obj["position"].asArray().unwrapOr({}); // fallback empty array
+
+        float x = posVec.size() > 0 ? posVec[0].asDouble().unwrapOr(0.0) : 0.0;
+        float y = posVec.size() > 1 ? posVec[1].asDouble().unwrapOr(0.0) : 0.0;
 
         return inputs_viewer::NodeTransform{
-            { posVec[0].asDouble(), posVec[1].asDouble() },
-            obj["scale"].asDouble(),
-            obj["rotation"].asDouble(),
-            obj["isVisible"].asBool()
+            { x, y },
+            obj["scale"].asDouble().unwrapOr(1.0f),
+            obj["rotation"].asDouble().unwrapOr(0.0f),
+            obj["isVisible"].asBool().unwrapOr(true)
         };
     }
 };
