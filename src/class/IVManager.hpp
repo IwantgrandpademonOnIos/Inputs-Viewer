@@ -15,34 +15,19 @@ public:
     IVManager();
     static IVManager& get();
 
-    // Default transforms for each player
+    // Default transforms
     static NodeTransform getDefaultP1Transform();
     static NodeTransform getDefaultP2Transform();
 
-    // Per-level settings (by level ID string)
+    // Per-level settings
     LevelSettings getLevelSettings(std::string const& levelID);
     void setLevelSettings(std::string const& levelID, LevelSettings const& settings);
 
-    // Load/save all settings from/to Geode storage
+    // Load/save all settings
     void loadSettings();
     void saveSettings();
 
 public:
     bool m_isInSetting;
 
-    cocos2d::ccColor4B m_backgroundPressColor;
-    cocos2d::ccColor4B m_backgroundReleaseColor;
-    cocos2d::ccColor4B m_outlinePressColor;
-    cocos2d::ccColor4B m_outlineReleaseColor;
-    cocos2d::ccColor4B m_textPressColor;
-    cocos2d::ccColor4B m_textReleaseColor;
-
-    LevelSettings m_settingClassic;
-    LevelSettings m_settingPlatformer;
-
-protected:
-    // Map of levelID -> LevelSettings
-    std::unordered_map<std::string, LevelSettings> m_levelSettings;
-};
-
-GEODE_NS_IV_END
+    cocos2d::ccColor4B m_background
