@@ -21,17 +21,17 @@ struct LevelSettings {
 GEODE_NS_IV_END
 
 // ---------------------------------------------------------
-// JSON SERIALIZATION
+// JSON SERIALIZATION (for CPM matjson)
 // ---------------------------------------------------------
 
 template <>
 struct matjson::Serialize<inputs_viewer::NodeTransform> {
     static matjson::Value toJson(inputs_viewer::NodeTransform const& t) {
-        auto obj = matjson::Value::object();
+        matjson::Object obj;
 
-        auto pos = matjson::Value::array();
-        pos.push_back(t.position.x);
-        pos.push_back(t.position.y);
+        matjson::Array pos;
+        pos.push(t.position.x);
+        pos.push(t.position.y);
 
         obj["position"] = pos;
         obj["scale"] = t.scale;
@@ -57,7 +57,7 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
 template <>
 struct matjson::Serialize<inputs_viewer::LevelSettings> {
     static matjson::Value toJson(inputs_viewer::LevelSettings const& s) {
-        auto obj = matjson::Value::object();
+        matjson::Object obj;
         obj["p1Transform"] = matjson::Serialize<inputs_viewer::NodeTransform>::toJson(s.p1Transform);
         obj["p2Transform"] = matjson::Serialize<inputs_viewer::NodeTransform>::toJson(s.p2Transform);
         return obj;
