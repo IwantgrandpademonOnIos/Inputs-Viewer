@@ -21,7 +21,7 @@ struct LevelSettings {
 GEODE_NS_IV_END
 
 // ---------------------------------------------------------
-// JSON SERIALIZATION (Result<T> + unwrapOr())
+// JSON SERIALIZATION (Result<T> + unwrapOr + explicit casts)
 // ---------------------------------------------------------
 
 template <>
@@ -44,16 +44,25 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
         auto& obj = v;
 
-        auto posVec = obj["position"].asArray().unwrapOr({}); // fallback empty array
+        auto posVec = obj["position"].asArray().unwrapOr({});
 
-        float x = posVec.size() > 0 ? posVec[0].asDouble().unwrapOr(0.0) : 0.0;
-        float y = posVec.size() > 1 ? posVec[1].asDouble().unwrapOr(0.0) : 0.0;
+        float x = posVec.size() > 0
+            ? static_cast<float>(posVec[0].asDouble().unwrapOr(0.0))
+            : 0.0f;
+
+        float y = posVec.size() > 1
+            ? static_cast<float>(posVec[1].asDouble().unwrapOr(0.0))
+            : 0.0f;
+
+        float scale = static_cast<float>(obj["scale"].asDouble().unwrapOr(1.0));
+        float rotation = static_cast<float>(obj["rotation"].asDouble().unwrapOr(0.0));
+        bool isVisible = obj["isVisible"].asBool().unwrapOr(true);
 
         return inputs_viewer::NodeTransform{
             { x, y },
-            obj["scale"].asDouble().unwrapOr(1.0f),
-            obj["rotation"].asDouble().unwrapOr(0.0f),
-            obj["isVisible"].asBool().unwrapOr(true)
+            scale,
+            rotation,
+            isVisible
         };
     }
 };
