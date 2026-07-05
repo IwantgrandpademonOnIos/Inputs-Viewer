@@ -21,7 +21,7 @@ struct LevelSettings {
 GEODE_NS_IV_END
 
 // ---------------------------------------------------------
-// JSON SERIALIZATION (minimal matjson API)
+// JSON SERIALIZATION (for Result<> matjson API)
 // ---------------------------------------------------------
 
 template <>
@@ -42,9 +42,10 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
     }
 
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
-        auto& obj = v; // v *is* the object
+        auto obj = v.asObject();
 
-        auto pos = obj["position"].asArray();
+        auto posResult = obj["position"].asArray();
+        auto const& pos = posResult.value();   // ⭐ THIS FIXES YOUR ERROR
 
         return inputs_viewer::NodeTransform{
             { pos[0].asDouble(), pos[1].asDouble() },
@@ -65,7 +66,7 @@ struct matjson::Serialize<inputs_viewer::LevelSettings> {
     }
 
     static inputs_viewer::LevelSettings fromJson(matjson::Value const& v) {
-        auto& obj = v;
+        auto obj = v.asObject();
 
         return inputs_viewer::LevelSettings{
             matjson::Serialize<inputs_viewer::NodeTransform>::fromJson(obj["p1Transform"]),
