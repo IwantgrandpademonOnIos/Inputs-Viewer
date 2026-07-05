@@ -21,7 +21,7 @@ struct LevelSettings {
 GEODE_NS_IV_END
 
 // ---------------------------------------------------------
-// JSON SERIALIZATION (for minimal matjson API)
+// JSON SERIALIZATION (minimal matjson API + unwrap())
 // ---------------------------------------------------------
 
 template <>
@@ -42,13 +42,12 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
     }
 
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
-        auto& obj = v; // v *is* the object in your matjson version
+        auto& obj = v; // v IS the object
 
-        auto posResult = obj["position"].asArray();
-        auto const& pos = posResult.value(); // FIX: Result -> vector
+        auto posVec = obj["position"].asArray().unwrap(); // FIX: unwrap()
 
         return inputs_viewer::NodeTransform{
-            { pos[0].asDouble(), pos[1].asDouble() },
+            { posVec[0].asDouble(), posVec[1].asDouble() },
             obj["scale"].asDouble(),
             obj["rotation"].asDouble(),
             obj["isVisible"].asBool()
