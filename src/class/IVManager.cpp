@@ -14,9 +14,7 @@ void IVManager::loadSettings() {
     auto saved = Mod::get()->getSavedValue<matjson::Value>("level-settings", matjson::Object{});
 
     for (auto& [key, value] : saved.asObject()) {
-        // Deserialize LevelSettings from JSON
         LevelSettings settings = matjson::Serialize<LevelSettings>::fromJson(value);
-
         m_levelSettings[key] = settings;
     }
 }
@@ -25,7 +23,6 @@ void IVManager::saveSettings() {
     matjson::Object saved;
 
     for (auto const& [key, settings] : m_levelSettings) {
-        // Serialize LevelSettings into JSON
         saved[key] = matjson::Serialize<LevelSettings>::toJson(settings);
     }
 
@@ -37,15 +34,12 @@ LevelSettings IVManager::getLevelSettings(std::string const& levelID) {
         return m_levelSettings[levelID];
     }
 
-    // Default settings
     LevelSettings defaultSettings{
         NodeTransform{{0.f, 0.f}, 1.f, 0.f, true},
         NodeTransform{{0.f, 0.f}, 1.f, 0.f, true}
     };
 
-    // Save default using proper JSON serialization
     m_levelSettings[levelID] = defaultSettings;
-
     return defaultSettings;
 }
 
