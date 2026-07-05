@@ -42,7 +42,7 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
     }
 
     static inputs_viewer::NodeTransform fromJson(matjson::Value const& v) {
-        auto obj = v.asObject();
+        auto obj = v();
 
         auto posResult = obj["position"].asArray();
         auto const& pos = posResult.value();   // ⭐ THIS FIXES YOUR ERROR
