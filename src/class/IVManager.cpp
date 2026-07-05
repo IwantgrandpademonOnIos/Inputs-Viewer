@@ -21,16 +21,18 @@ NodeTransform IVManager::getDefaultP2Transform() {
 }
 
 void IVManager::loadSettings() {
-    // Load saved JSON object (Value::object() is correct for your matjson)
     auto saved = Mod::get()->getSavedValue<matjson::Value>(
         "level-settings",
         matjson::Value::object()
     );
 
-    // saved.asObject() DOES exist in your version — this part is correct
-    for (auto& [key, value] : saved.asObject()) {
-        auto settings = matjson::Serialize<LevelSettings>::fromJson(value);
-        m_levelSettings[key] = settings;
+    if (!saved.isObject()) return;
+
+    auto& obj = saved.as<matjson::Object>().unwrap(); // FIX: unwrap()
+
+    for (auto& [key, value] : obj) {
+        m_levelSettings[key] =
+            matjson::Serialize<LevelSettings>::fromJson(value);
     }
 }
 
@@ -38,7 +40,8 @@ void IVManager::saveSettings() {
     auto saved = matjson::Value::object();
 
     for (auto const& [key, settings] : m_levelSettings) {
-        saved[key] = matjson::Serialize<LevelSettings>::toJson(settings);
+        saved[key] =
+            matjson::Serialize<LevelSettings>::toJson(settings);
     }
 
     Mod::get()->setSavedValue("level-settings", saved);
@@ -58,7 +61,8 @@ LevelSettings IVManager::getLevelSettings(std::string const& levelID) {
     return defaults;
 }
 
-void IVManager::setLevelSettings(std::string const& levelID, LevelSettings const& settings) {
+void IVManager::setLevelSettings(std::string const& levelID,
+                                 LevelSettings const& settings) {
     m_levelSettings[levelID] = settings;
     saveSettings();
 }
