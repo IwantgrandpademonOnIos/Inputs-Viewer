@@ -30,4 +30,19 @@ public:
 public:
     bool m_isInSetting;
 
-    cocos2d::ccColor4B m_background
+    cocos2d::ccColor4B m_backgroundPressColor;
+    cocos2d::ccColor4B m_backgroundReleaseColor;
+    cocos2d::ccColor4B m_outlinePressColor;
+    cocos2d::ccColor4B m_outlineReleaseColor;
+    cocos2d::ccColor4B m_textPressColor;
+    cocos2d::ccColor4B m_textReleaseColor;
+
+    LevelSettings m_settingClassic;
+    LevelSettings m_settingPlatformer;
+
+protected:
+    // Map of levelID → LevelSettings
+    std::unordered_map<std::string, LevelSettings> m_levelSettings;
+};
+
+GEODE_NS_IV_END
