@@ -28,9 +28,9 @@ void IVManager::loadSettings() {
 
     if (!saved.isObject()) return;
 
-    auto& obj = saved.as<matjson::Object>().unwrap(); // FIX: unwrap()
+    auto& map = saved.asMap(); // ✔ THIS WORKS IN YOUR VERSION
 
-    for (auto& [key, value] : obj) {
+    for (auto& [key, value] : map) {
         m_levelSettings[key] =
             matjson::Serialize<LevelSettings>::fromJson(value);
     }
