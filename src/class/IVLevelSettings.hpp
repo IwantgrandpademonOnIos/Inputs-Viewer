@@ -43,25 +43,39 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
         float x = 0.f;
         float y = 0.f;
 
-        if (obj["position"].isArray()) {
-            auto arr = obj["position"].asArray();
-            if (arr.size() > 0 && arr[0].isNumber())
-                x = static_cast<float>(arr[0].asNumber());
-            if (arr.size() > 1 && arr[1].isNumber())
-                y = static_cast<float>(arr[1].asNumber());
+        // position array
+        auto arrResult = obj["position"].asArray();
+        if (arrResult.isOk()) {
+            auto const& arr = arrResult.unwrap();
+
+            if (arr.size() > 0 && arr[0].isNumber()) {
+                auto n = arr[0].asNumber();
+                if (n.isOk()) x = static_cast<float>(n.unwrap());
+            }
+
+            if (arr.size() > 1 && arr[1].isNumber()) {
+                auto n = arr[1].asNumber();
+                if (n.isOk()) y = static_cast<float>(n.unwrap());
+            }
         }
 
-        float scale = obj["scale"].isNumber()
-            ? static_cast<float>(obj["scale"].asNumber())
-            : 1.f;
+        // scale
+        float scale = 1.f;
+        auto scaleResult = obj["scale"].asNumber();
+        if (scaleResult.isOk())
+            scale = static_cast<float>(scaleResult.unwrap());
 
-        float rotation = obj["rotation"].isNumber()
-            ? static_cast<float>(obj["rotation"].asNumber())
-            : 0.f;
+        // rotation
+        float rotation = 0.f;
+        auto rotResult = obj["rotation"].asNumber();
+        if (rotResult.isOk())
+            rotation = static_cast<float>(rotResult.unwrap());
 
-        bool isVisible = obj["isVisible"].isBool()
-            ? obj["isVisible"].asBool()
-            : true;
+        // isVisible
+        bool isVisible = true;
+        auto visResult = obj["isVisible"].asBool();
+        if (visResult.isOk())
+            isVisible = visResult.unwrap();
 
         return inputs_viewer::NodeTransform{
             { x, y },
