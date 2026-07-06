@@ -49,25 +49,25 @@ struct matjson::Serialize<inputs_viewer::NodeTransform> {
             auto const& arr = arrResult.unwrap();
 
             if (arr.size() > 0 && arr[0].isNumber()) {
-                auto n = arr[0].asNumber();
+                auto n = arr[0].asDouble();
                 if (n.isOk()) x = static_cast<float>(n.unwrap());
             }
 
             if (arr.size() > 1 && arr[1].isNumber()) {
-                auto n = arr[1].asNumber();
+                auto n = arr[1].asDouble();
                 if (n.isOk()) y = static_cast<float>(n.unwrap());
             }
         }
 
         // scale
         float scale = 1.f;
-        auto scaleResult = obj["scale"].asNumber();
+        auto scaleResult = obj["scale"].asDouble();
         if (scaleResult.isOk())
             scale = static_cast<float>(scaleResult.unwrap());
 
         // rotation
         float rotation = 0.f;
-        auto rotResult = obj["rotation"].asNumber();
+        auto rotResult = obj["rotation"].asDouble();
         if (rotResult.isOk())
             rotation = static_cast<float>(rotResult.unwrap());
 
