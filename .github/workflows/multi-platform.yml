@@ -15,11 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { name: Windows,   os: windows-latest, target: windows }
-          - { name: macOS,     os: macos-latest,   target: macos }
-          - { name: iOS,       os: macos-latest,   target: ios }
-          - { name: Android32, os: ubuntu-latest,  target: android32 }
-          - { name: Android64, os: ubuntu-latest,  target: android64 }
+          - { name: Windows,   os: windows-latest }
+          - { name: macOS,     os: macos-latest }
+          - { name: iOS,       os: macos-latest }
+          - { name: Android32, os: ubuntu-latest }
+          - { name: Android64, os: ubuntu-latest }
 
     steps:
       - name: Checkout
@@ -32,7 +32,6 @@ jobs:
           build-args: --config RelWithDebInfo
           bindings-ref: main
           combine: true
-          platform: ${{ matrix.config.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
