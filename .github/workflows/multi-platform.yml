@@ -32,7 +32,7 @@ jobs:
           build-args: --config RelWithDebInfo
           bindings-ref: main
           combine: true
-          target: ${{ matrix.config.target }}
+          platform: ${{ matrix.config.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
