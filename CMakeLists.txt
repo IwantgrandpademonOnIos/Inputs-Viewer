@@ -7,38 +7,35 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Geode SDK root (usually set by the CLI / workflow)
-# If you already have this set elsewhere, you can remove or adjust.
-if(NOT DEFINED GEODE_SDK)
-    message(FATAL_ERROR "GEODE_SDK is not set")
-endif()
+# Geode SDK (provided automatically by CLI / GitHub Actions)
+find_package(Geode REQUIRED)
 
-# Add main source files
+# Collect all source files
 file(GLOB_RECURSE INPUTS_VIEWER_SOURCES
     src/*.cpp
     src/class/*.cpp
 )
 
+# Create the mod target
 add_library(InputsViewer SHARED
     ${INPUTS_VIEWER_SOURCES}
 )
 
-# Include dirs – THIS fixes the iOS header issue
+# Include directories — REQUIRED for iOS to find headers
 target_include_directories(InputsViewer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/class
 )
 
-# Link against Geode (loader, bindings, etc.)
-# These are typical for Geode mods; adjust if your SDK layout differs.
+# Link against Geode loader + bindings
 target_link_libraries(InputsViewer PRIVATE
-    geode-sdk::loader
-    geode-sdk::bindings
+    geode::loader
+    geode::bindings
 )
 
-# Recommended compile options for Geode mods
+# Platform‑specific tweaks (Geode handles most automatically)
 if(APPLE)
-    # iOS / macOS specific flags
+    # iOS + macOS
     target_compile_options(InputsViewer PRIVATE
         -fvisibility=hidden
         -ffunction-sections
@@ -50,5 +47,5 @@ elseif(WIN32)
     )
 endif
 
-# Install / output config (Geode usually handles this via CLI/workflow,
-# so you might not need anything extra here)
+# Register the mod with Geode
+geode_mod(InputsViewer)
