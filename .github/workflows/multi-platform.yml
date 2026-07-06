@@ -43,10 +43,6 @@ jobs:
           build-config: RelWithDebInfo
           bindings: geode-sdk/bindings
           bindings-ref: main
-          toolchain: geode-sdk/ios.toolchain.cmake
-          CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED: "NO"
-          CMAKE_XCODE_ATTRIBUTE_ENABLE_BITCODE: "NO"
-          CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC: "YES"
           combine: true
           target: ${{ matrix.config.target }}
 
