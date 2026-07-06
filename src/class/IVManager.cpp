@@ -28,10 +28,9 @@ void IVManager::loadSettings() {
 
     if (!saved.isObject()) return;
 
-    // Your matjson version exposes objects ONLY through getMap()
-    auto const& map = saved.getMap();
-
-    for (auto const& [key, value] : map) {
+    // UNIVERSAL matjson iteration: works on ALL platforms
+    for (auto const& key : saved.keys()) {
+        auto const& value = saved[key];
         m_levelSettings[key] =
             matjson::Serialize<LevelSettings>::fromJson(value);
     }
