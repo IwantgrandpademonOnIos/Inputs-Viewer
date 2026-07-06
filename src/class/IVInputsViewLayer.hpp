@@ -1,25 +1,37 @@
 #pragma once
+
 #include <Geode/Geode.hpp>
-#include "IVPlayerInputNode.hpp"
-#include "IVNodeContainer.hpp"
+#include <Geode/utils/cocos.hpp>
+
+#include "IVEvent.hpp"
+#include "IVLevelSettings.hpp"
+#include "class/IVPlayerInputNode.hpp"
 
 GEODE_NS_IV_BEGIN
 
-class IVInputsViewerLayer : public cocos2d::CCLayer {
+class InputsViewLayer : public cocos2d::CCLayer {
 public:
-    IVInputsViewerLayer();
-    static IVInputsViewerLayer* create();
+    InputsViewLayer(LevelSettingsType type);
+    static InputsViewLayer* create(LevelSettingsType type);
 
     bool init() override;
 
-    // Called every frame to update input states
-    void update(float dt) override;
+    void handleButton(bool down, PlayerButton input, bool isP1, bool updateCounters);
+    LevelSettings const& getLevelSettings() const noexcept;
+    void setLevelSettings(LevelSettingsType type);
+    void releaseAllButtons();
+    void refreshDisplay();
 
-    // Add an input node to the viewer
-    void addInputNode(IVPlayerInputNode* node);
+    void onSettingEvent(SettingEventType);
 
 protected:
-    IVNodeContainer* m_container = nullptr;
+    std::reference_wrapper<LevelSettings> m_currentSetting;
+
+    IVPlayerInputNode* m_p1InputNode = nullptr;
+    IVPlayerInputNode* m_p2InputNode = nullptr;
+
+    // Geode 5 removed EventListener, so this member is gone.
+    // geode::EventListener<IVSettingFilter> m_settingListener;
 };
 
 GEODE_NS_IV_END
