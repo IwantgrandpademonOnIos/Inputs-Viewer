@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.21)
 
 project(InputsViewer LANGUAGES CXX)
 
-# Use modern C++
+# Modern C++
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Geode SDK (provided automatically by CLI / GitHub Actions)
+# Find Geode SDK (provided automatically by CLI / GitHub Actions)
 find_package(Geode REQUIRED)
 
 # Collect all source files
@@ -33,9 +33,8 @@ target_link_libraries(InputsViewer PRIVATE
     geode::bindings
 )
 
-# Platform‑specific tweaks (Geode handles most automatically)
+# Platform-specific tweaks
 if(APPLE)
-    # iOS + macOS
     target_compile_options(InputsViewer PRIVATE
         -fvisibility=hidden
         -ffunction-sections
