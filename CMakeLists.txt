@@ -1,41 +1,54 @@
 cmake_minimum_required(VERSION 3.21)
+
+project(InputsViewer LANGUAGES CXX)
+
+# Use modern C++
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
-    set(CMAKE_OSX_ARCHITECTURES "arm64")
-else()
-    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-endif()
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-project(InputsViewer VERSION 1.0.0)
-
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
-
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        -Wall
-        -Wextra
-        -Wimplicit-fallthrough
-        -Wno-overloaded-virtual
-        -Werror=return-type
-    )
+# Geode SDK root (usually set by the CLI / workflow)
+# If you already have this set elsewhere, you can remove or adjust.
+if(NOT DEFINED GEODE_SDK)
+    message(FATAL_ERROR "GEODE_SDK is not set")
 endif()
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE
-    src/macros.hpp
+# Add main source files
+file(GLOB_RECURSE INPUTS_VIEWER_SOURCES
+    src/*.cpp
+    src/class/*.cpp
 )
 
-if (NOT DEFINED ENV{GEODE_SDK})
-    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
-else()
-    message(STATUS "Found Geode: $ENV{GEODE_SDK}")
-endif()
+add_library(InputsViewer SHARED
+    ${INPUTS_VIEWER_SOURCES}
+)
 
-add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
+# Include dirs – THIS fixes the iOS header issue
+target_include_directories(InputsViewer PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/class
+)
 
-target_include_directories(${PROJECT_NAME} PRIVATE src/)
+# Link against Geode (loader, bindings, etc.)
+# These are typical for Geode mods; adjust if your SDK layout differs.
+target_link_libraries(InputsViewer PRIVATE
+    geode-sdk::loader
+    geode-sdk::bindings
+)
 
-setup_geode_mod(${PROJECT_NAME})
+# Recommended compile options for Geode mods
+if(APPLE)
+    # iOS / macOS specific flags
+    target_compile_options(InputsViewer PRIVATE
+        -fvisibility=hidden
+        -ffunction-sections
+        -fdata-sections
+    )
+elseif(WIN32)
+    target_compile_definitions(InputsViewer PRIVATE
+        _CRT_SECURE_NO_WARNINGS
+    )
+endif
+
+# Install / output config (Geode usually handles this via CLI/workflow,
+# so you might not need anything extra here)
