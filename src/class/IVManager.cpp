@@ -28,8 +28,10 @@ void IVManager::loadSettings() {
 
     if (!saved.isObject()) return;
 
-    // Your matjson uses .items() to iterate objects
-    for (auto const& [key, value] : saved.items()) {
+    // Your matjson version exposes objects ONLY through getMap()
+    auto const& map = saved.getMap();
+
+    for (auto const& [key, value] : map) {
         m_levelSettings[key] =
             matjson::Serialize<LevelSettings>::fromJson(value);
     }
