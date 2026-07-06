@@ -1,4 +1,4 @@
-name: Build
+name: Build Geode Mod
 
 on:
   workflow_dispatch:
@@ -24,9 +24,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Geode SDK
-        uses: geode-sdk/setup-geode@main
 
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
