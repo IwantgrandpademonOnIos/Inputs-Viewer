@@ -1,4 +1,4 @@
-#include "IVNodeButton.hpp"
+#include "node/IVNodeButton.hpp"
 
 using namespace geode::prelude;
 
