@@ -1,4 +1,4 @@
-#include "IVNodeToggle.hpp"
+#include "node/IVNodeToggle.hpp"
 
 using namespace geode::prelude;
 
