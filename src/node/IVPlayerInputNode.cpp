@@ -1,4 +1,4 @@
-#include "IVPlayerInputNode.hpp"
+#include "node/IVPlayerInputNode.hpp"
 
 using namespace geode::prelude;
 
