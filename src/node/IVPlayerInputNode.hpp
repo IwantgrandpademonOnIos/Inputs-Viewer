@@ -1,5 +1,5 @@
 #pragma once
-#include "IVNodeInput.hpp"
+#include "node/IVNodeInput.hpp"
 
 GEODE_NS_IV_BEGIN
 
