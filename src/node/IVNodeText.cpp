@@ -1,4 +1,4 @@
-#include "IVNodeText.hpp"
+#include "node/IVNodeText.hpp"
 
 using namespace geode::prelude;
 
