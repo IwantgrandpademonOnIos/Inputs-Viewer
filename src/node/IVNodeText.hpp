@@ -1,5 +1,5 @@
 #pragma once
-#include "IVNodeBase.hpp"
+#include "node/IVNodeBase.hpp"
 
 GEODE_NS_IV_BEGIN
 
