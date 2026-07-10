@@ -1,6 +1,6 @@
 #pragma once
 #include <Geode/Geode.hpp>
-#include "IVNodeBase.hpp"
+#include "node/IVNodeBase.hpp"
 #include "IVStyle.hpp"
 
 GEODE_NS_IV_BEGIN
