@@ -1,7 +1,7 @@
 #pragma once
 #include <Geode/Geode.hpp>
-#include "IVPlayerInputNode.hpp"
-#include "IVNodeContainer.hpp"
+#include "node/IVPlayerInputNode.hpp"
+#include "node/IVNodeContainer.hpp"
 
 GEODE_NS_IV_BEGIN
 
