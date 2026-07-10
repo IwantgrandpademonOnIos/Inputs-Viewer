@@ -1,42 +1,41 @@
 cmake_minimum_required(VERSION 3.21)
-
-project(InputsViewer LANGUAGES CXX)
-
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
+else()
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+endif()
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-find_package(Geode REQUIRED)
+project(InputsViewer VERSION 1.0.0)
 
-file(GLOB_RECURSE INPUTS_VIEWER_SOURCES
-    src/*.cpp
-    src/class/*.cpp
-)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
-add_library(InputsViewer SHARED
-    ${INPUTS_VIEWER_SOURCES}
-)
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-target_include_directories(InputsViewer PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/class
-)
-
-target_link_libraries(InputsViewer PRIVATE
-    geode::loader
-    geode::bindings
-)
-
-if(APPLE)
-    target_compile_options(InputsViewer PRIVATE
-        -fvisibility=hidden
-        -ffunction-sections
-        -fdata-sections
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wall
+        -Wextra
+        -Wimplicit-fallthrough
+        -Wno-overloaded-virtual
+        -Werror=return-type
     )
-elseif(WIN32)
-    target_compile_definitions(InputsViewer PRIVATE
-        _CRT_SECURE_NO_WARNINGS
-    )
-endif
+endif()
 
-geode_mod(InputsViewer)
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    src/macros.hpp
+)
+
+if (NOT DEFINED ENV{GEODE_SDK})
+    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
+else()
+    message(STATUS "Found Geode: $ENV{GEODE_SDK}")
+endif()
+
+add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
+
+target_include_directories(${PROJECT_NAME} PRIVATE src/)
+
+setup_geode_mod(${PROJECT_NAME})
