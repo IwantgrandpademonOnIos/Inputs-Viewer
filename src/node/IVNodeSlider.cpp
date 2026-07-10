@@ -1,4 +1,4 @@
-#include "IVNodeSlider.hpp"
+#include "node/IVNodeSlider.hpp"
 
 using namespace geode::prelude;
 
